@@ -19,6 +19,7 @@ graph LR
     Internet["Internet / Home WiFi"] --> Keenetic["Keenetic Starter"]
     Keenetic --> MikroTik["MikroTik hEX S"]
     MikroTik --> Switch["Cudy Switch 8p"]
+    MikroTik --> NAS["Ugreen DXP4800 Pro"]
     Switch --> D1["d1 master"]
     Switch --> D2["d2 master"]
     Switch --> D3["d3 master"]
@@ -34,6 +35,13 @@ graph LR
 
 ## Detailed documentation
 
-- [Hardware](hardware.md) – specs for all devices, nodes d1-d4, storage
+- [Hardware](hardware.md) – specs for all devices, nodes d1-d4, NAS, storage
 - [Network](network.md) – network topology, IP addressing, WiFi bridge
-- [Software](software.md) – OS, k3s, Ansible, services (work in progress)
+- [Software](software.md) – OS, k3s, Ansible, services
+
+## Changelog
+
+| Version | Date | Changes |
+|---------|------|---------|
+| v1.1 | May 2026 | Added Ugreen DXP4800 Pro NAS (TrueNAS, 2x 10 TB WD Red Plus, ZFS mirror) |
+| v1.0 | November 2025 | Initial build: 4x Dell Optiplex 3060 nodes, k3s cluster, MikroTik, WiFi bridge |

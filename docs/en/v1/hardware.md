@@ -11,6 +11,7 @@
 | Kingston 1 TB SSD (external) | Backup storage | USB 3.0, connected to d4 |
 | MikroTik hEX S | Router | 1 Gbit, manages all cluster networking |
 | Cudy (unmanaged) | Switch | 8 ports, 1 Gbit |
+| Ugreen DXP4800 Pro | NAS | 8 GB RAM, 128 GB SSD (TrueNAS), 2x 10 TB HDD ZFS mirror |
 | Keenetic Starter | WiFi bridge | 100 Mbit, connects to home WiFi |
 
 ## Cluster nodes (d1-d4)
@@ -38,6 +39,16 @@ Workloads can run on all nodes, including master nodes (taints removed).
 - **Model**: Kingston 1 TB SSD
 - **Connection**: USB 3.0 to node d4
 - **Purpose**: backups and large file storage
+
+## NAS
+
+- **Model**: Ugreen DXP4800 Pro
+- **RAM**: 8 GB (stock)
+- **OS**: TrueNAS (installed instead of stock firmware) on 128 GB SSD
+- **Storage**: 2x 10 TB WD Red Plus in ZFS mirror
+- **Connection**: Ethernet directly into a dedicated MikroTik port (not through the switch)
+- **Purpose**: data storage only – cluster backups, media files (Plex, *arr stack), S3 data, torrents, shared folder for direct laptop access
+- **Principle**: no services run on the NAS – all services run in the k3s cluster and access the NAS over the network for data
 
 ## Networking equipment
 

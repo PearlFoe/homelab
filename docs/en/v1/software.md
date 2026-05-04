@@ -2,7 +2,8 @@
 
 ## Operating system
 
-All nodes run **Ubuntu Server 22.04 LTS**.
+- **Cluster nodes** (d1-d4): Ubuntu Server 22.04 LTS
+- **NAS** (Ugreen DXP4800 Pro): TrueNAS (installed instead of stock firmware)
 
 ## Configuration management
 

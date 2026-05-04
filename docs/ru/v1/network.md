@@ -11,10 +11,13 @@ graph TD
         Keenetic["Keenetic Starter\n100 Мбит WiFi"]
     end
     subgraph core ["Ядро сети"]
-        MikroTik["MikroTik hEX S\nПорт 1: WAN от Keenetic\nПорт 2: к коммутатору"]
+        MikroTik["MikroTik hEX S"]
     end
     subgraph access ["Уровень доступа"]
         Switch["Cudy 8-портовый коммутатор\n1 Гбит, неуправляемый"]
+    end
+    subgraph storage ["Хранилище"]
+        NAS["Ugreen DXP4800 Pro\nTrueNAS\n2x 10 ТБ ZFS mirror"]
     end
     subgraph nodes ["Ноды кластера"]
         D1["d1\nDell Optiplex 3060\nмастер"]
@@ -27,6 +30,7 @@ graph TD
     HomeRouter -.->|WiFi| Keenetic
     Keenetic -->|"Ethernet, 100 Мбит"| MikroTik
     MikroTik -->|"Ethernet, 1 Гбит"| Switch
+    MikroTik -->|"Ethernet, 1 Гбит"| NAS
     Switch --> D1
     Switch --> D2
     Switch --> D3
@@ -43,6 +47,12 @@ graph TD
 ```
 
 Обратный путь – в обратном порядке. Весь трафик между нодами проходит через коммутатор на скорости 1 Гбит. Трафик в интернет ограничен 100 Мбит (узкое место – WiFi-мост Keenetic Starter).
+
+NAS подключён напрямую в отдельный порт MikroTik (не через коммутатор). Трафик между нодами и NAS идёт через MikroTik:
+
+```
+Нода (d1-d4) → Cudy Switch → MikroTik hEX S → Ugreen NAS
+```
 
 ## Роль каждого устройства
 
@@ -64,6 +74,10 @@ graph TD
 ### Cudy Switch – коммутатор
 
 Прозрачный неуправляемый коммутатор на 8 портов (1 Гбит). Объединяет все 4 ноды на один порт MikroTik. Выбран для удобства подключения и с запасом свободных портов на случай расширения кластера.
+
+### Ugreen DXP4800 Pro – NAS
+
+Подключён напрямую в отдельный порт MikroTik. Используется исключительно как хранилище данных – сервисы на нём не запускаются. Доступ из кластера и с ноутбука по сети.
 
 ## Почему такая архитектура
 

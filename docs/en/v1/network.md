@@ -11,10 +11,13 @@ graph TD
         Keenetic["Keenetic Starter\n100 Mbit WiFi"]
     end
     subgraph core ["Core Network"]
-        MikroTik["MikroTik hEX S\nPort 1: WAN from Keenetic\nPort 2: to Switch"]
+        MikroTik["MikroTik hEX S"]
     end
     subgraph access ["Access Layer"]
         Switch["Cudy 8-port Switch\n1 Gbit Unmanaged"]
+    end
+    subgraph storage ["Storage"]
+        NAS["Ugreen DXP4800 Pro\nTrueNAS\n2x 10 TB ZFS mirror"]
     end
     subgraph nodes ["Cluster Nodes"]
         D1["d1\nDell Optiplex 3060\nmaster"]
@@ -27,6 +30,7 @@ graph TD
     HomeRouter -.->|WiFi| Keenetic
     Keenetic -->|"Ethernet, 100 Mbit"| MikroTik
     MikroTik -->|"Ethernet, 1 Gbit"| Switch
+    MikroTik -->|"Ethernet, 1 Gbit"| NAS
     Switch --> D1
     Switch --> D2
     Switch --> D3
@@ -43,6 +47,12 @@ Node (d1-d4) → Cudy Switch → MikroTik hEX S → Keenetic Starter → WiFi �
 ```
 
 The return path is reversed. All traffic between nodes goes through the switch at 1 Gbit. Internet traffic is limited to 100 Mbit (bottleneck: Keenetic Starter WiFi bridge).
+
+The NAS is connected directly to a dedicated MikroTik port (not through the switch). Traffic between nodes and the NAS goes through MikroTik:
+
+```
+Node (d1-d4) → Cudy Switch → MikroTik hEX S → Ugreen NAS
+```
 
 ## Role of each device
 
@@ -64,6 +74,10 @@ All cluster network configuration is intentionally concentrated here to have a s
 ### Cudy Switch – switch
 
 A transparent unmanaged 8-port switch (1 Gbit). Aggregates all 4 nodes onto a single MikroTik port. Chosen for convenience and spare ports for future cluster expansion.
+
+### Ugreen DXP4800 Pro – NAS
+
+Connected directly to a dedicated MikroTik port. Used exclusively as data storage – no services run on it. Accessed from the cluster and from a laptop over the network.
 
 ## Why this architecture
 

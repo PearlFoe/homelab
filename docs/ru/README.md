@@ -5,13 +5,15 @@
 > [Read in English](../../README.md)
 
 ![Фото кластера](../images/v1/homelab.jpg)
+![Фото NAS](../images/v1/nas.jpg)
 
 ## Текущая версия
 
-[v1](v1/README.md) – 4 ноды на базе Dell Optiplex 3060, k3s кластер, сеть на MikroTik, управление конфигурацией через Ansible.
+[v1.1](v1/README.md) – 4 ноды на базе Dell Optiplex 3060 + Ugreen NAS, k3s кластер, сеть на MikroTik, управление конфигурацией через Ansible.
 
 ## История версий
 
 | Версия | Период | Описание |
 |--------|--------|----------|
-| [v1](v1/README.md) | Ноябрь 2025 – настоящее время | 4x Dell Optiplex 3060, k3s кластер (3 мастера + 1 воркер), MikroTik hEX S, WiFi-мост для доступа в интернет |
+| [v1.1](v1/README.md) | Май 2026 – настоящее время | Добавлен Ugreen DXP4800 Pro NAS с TrueNAS, 2x 10 ТБ WD Red Plus в ZFS mirror |
+| [v1](v1/README.md) | Ноябрь 2025 – май 2026 | 4x Dell Optiplex 3060, k3s кластер (3 мастера + 1 воркер), MikroTik hEX S, WiFi-мост для доступа в интернет |

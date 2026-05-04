@@ -19,6 +19,7 @@ graph LR
     Internet["Интернет / Домашний WiFi"] --> Keenetic["Keenetic Starter"]
     Keenetic --> MikroTik["MikroTik hEX S"]
     MikroTik --> Switch["Cudy Switch 8p"]
+    MikroTik --> NAS["Ugreen DXP4800 Pro"]
     Switch --> D1["d1 мастер"]
     Switch --> D2["d2 мастер"]
     Switch --> D3["d3 мастер"]
@@ -34,6 +35,13 @@ graph LR
 
 ## Подробная документация
 
-- [Железо](hardware.md) – спецификации всех устройств, ноды d1-d4, хранилище
+- [Железо](hardware.md) – спецификации всех устройств, ноды d1-d4, NAS, хранилище
 - [Сеть](network.md) – сетевая топология, IP-адресация, WiFi-мост
-- [Софт](software.md) – ОС, k3s, Ansible, сервисы (в процессе наполнения)
+- [Софт](software.md) – ОС, k3s, Ansible, сервисы
+
+## История изменений
+
+| Версия | Дата | Изменения |
+|--------|------|-----------|
+| v1.1 | Май 2026 | Добавлен NAS Ugreen DXP4800 Pro (TrueNAS, 2x 10 ТБ WD Red Plus, ZFS mirror) |
+| v1.0 | Ноябрь 2025 | Первая сборка: 4 ноды Dell Optiplex 3060, k3s кластер, MikroTik, WiFi-мост |
