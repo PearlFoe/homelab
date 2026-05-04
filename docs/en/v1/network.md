@@ -6,12 +6,16 @@
 graph TD
     subgraph wan ["WAN / Internet"]
         HomeRouter["Home WiFi Router"]
+        VPS["VPS\nWireGuard Server"]
     end
     subgraph bridge ["WiFi Bridge"]
         Keenetic["Keenetic Starter\n100 Mbit WiFi"]
     end
+    subgraph localAccess ["Local Access"]
+        Laptop["Laptop"]
+    end
     subgraph core ["Core Network"]
-        MikroTik["MikroTik hEX S"]
+        MikroTik["MikroTik hEX S\nWireGuard Client"]
     end
     subgraph access ["Access Layer"]
         Switch["Cudy 8-port Switch\n1 Gbit Unmanaged"]
@@ -27,8 +31,10 @@ graph TD
         ExtSSD["Kingston 1TB SSD\nUSB 3.0"]
     end
 
+    VPS -.->|Internet| HomeRouter
     HomeRouter -.->|WiFi| Keenetic
     Keenetic -->|"Ethernet, 100 Mbit"| MikroTik
+    Laptop -->|"Ethernet, 1 Gbit"| MikroTik
     MikroTik -->|"Ethernet, 1 Gbit"| Switch
     MikroTik -->|"Ethernet, 1 Gbit"| NAS
     Switch --> D1
@@ -68,6 +74,7 @@ The single point of management for all cluster networking:
 - **Routing** – manages traffic between the cluster and the internet
 - **Firewall** – traffic filtering rules
 - **DNS** (optional) – if configured
+- **WireGuard client** – maintains a persistent tunnel to VPS (WireGuard server) for remote cluster access
 
 All cluster network configuration is intentionally concentrated here to have a single point of configuration.
 
@@ -85,10 +92,45 @@ Connected directly to a dedicated MikroTik port. Used exclusively as data storag
 - **All logic on MikroTik**: to avoid spreading configuration across multiple devices. A single point of configuration is easier to manage and debug.
 - **Unmanaged switch**: a managed one isn't needed with the current setup. All management is on MikroTik.
 
+## Cluster access
+
+### Local connection
+
+A laptop connects via cable directly to a free MikroTik port. Connection speed is 1 Gbit. This is the primary way to work with the cluster: used for day-to-day management as well as transferring large amounts of data (e.g. to NAS).
+
+### WireGuard VPN
+
+Remote access to the cluster is implemented via WireGuard VPN through an intermediate VPS:
+
+```mermaid
+graph LR
+    Client["Remote Client"] -->|WireGuard| VPS["VPS\nWireGuard Server"]
+    VPS -->|Internet| HomeRouter["Home Router"]
+    HomeRouter -.->|WiFi| Keenetic["Keenetic Starter"]
+    Keenetic --> MikroTik["MikroTik hEX S\nWireGuard Client"]
+    MikroTik --> Cluster["Cluster Nodes"]
+```
+
+There is no static IP address at home – it is dynamic and can change at any time. To solve this, an external VPS with a static IP is rented, running a WireGuard server. The setup works as follows:
+
+1. The VPS runs a WireGuard server – it accepts connections and is where users are managed
+2. MikroTik is configured as a WireGuard client and maintains a persistent tunnel to the VPS
+3. A remote client connects to the VPS, and traffic is routed through the tunnel into the home network
+
+Because MikroTik initiates the connection, a change of the home IP address does not affect cluster availability – the tunnel is re-established automatically.
+
+VPN traffic path:
+
+```
+Remote client → VPS (WireGuard) → Internet → Home Router → WiFi → Keenetic Starter → MikroTik hEX S (WireGuard) → Cudy Switch → Node (d1-d4)
+```
+
+The VPN is used for remote cluster management. It is not suitable for transferring large amounts of data due to limited throughput – for that, the local cable connection is used.
+
 ## Limitations
 
 - **100 Mbit internet**: the bottleneck is the WiFi bridge (Keenetic Starter, 100 Mbit). Between nodes it's 1 Gbit.
-- **No VPN**: cluster access only from the home network via cable. VPN is planned.
+- **VPN speed**: WireGuard via VPS is suitable for management but not for bulk data transfer.
 - **No channel redundancy**: if WiFi or Keenetic goes down, the cluster loses internet access.
 
 <!-- ## Logical network diagram -->

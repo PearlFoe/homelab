@@ -16,8 +16,10 @@ The first version of the home cluster. Four mini PCs joined into a k3s cluster, 
 
 ```mermaid
 graph LR
-    Internet["Internet / Home WiFi"] --> Keenetic["Keenetic Starter"]
-    Keenetic --> MikroTik["MikroTik hEX S"]
+    VPS["VPS (WireGuard)"] -.-> Internet["Internet / Home WiFi"]
+    Internet --> Keenetic["Keenetic Starter"]
+    Keenetic --> MikroTik["MikroTik hEX S\nWireGuard"]
+    Laptop["Laptop"] -->|cable| MikroTik
     MikroTik --> Switch["Cudy Switch 8p"]
     MikroTik --> NAS["Ugreen DXP4800 Pro"]
     Switch --> D1["d1 master"]
@@ -36,12 +38,13 @@ graph LR
 ## Detailed documentation
 
 - [Hardware](hardware.md) – specs for all devices, nodes d1-d4, NAS, storage
-- [Network](network.md) – network topology, IP addressing, WiFi bridge
+- [Network](network.md) – network topology, IP addressing, WiFi bridge, cluster access (cable + WireGuard VPN)
 - [Software](software.md) – OS, k3s, Ansible, services
 
 ## Changelog
 
 | Version | Date | Changes |
 |---------|------|---------|
+| v1.2 | May 2026 | Remote access via WireGuard VPN (rented VPS), local access via cable |
 | v1.1 | May 2026 | Added Ugreen DXP4800 Pro NAS (TrueNAS, 2x 10 TB WD Red Plus, ZFS mirror) |
 | v1.0 | November 2025 | Initial build: 4x Dell Optiplex 3060 nodes, k3s cluster, MikroTik, WiFi bridge |
