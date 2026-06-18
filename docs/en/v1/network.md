@@ -8,11 +8,12 @@ graph TD
         HomeRouter["Home WiFi Router"]
         VPS["VPS\nWireGuard Server"]
     end
-    subgraph bridge ["WiFi Bridge"]
+    subgraph bridge ["WiFi Bridge and Access"]
         Keenetic["Keenetic Starter\n100 Mbit WiFi"]
     end
     subgraph localAccess ["Local Access"]
         Laptop["Laptop"]
+        Device["Device"]
     end
     subgraph core ["Core Network"]
         MikroTik["MikroTik hEX S\nWireGuard Client"]
@@ -28,12 +29,12 @@ graph TD
         D2["d2\nDell Optiplex 3060\nmaster"]
         D3["d3\nDell Optiplex 3060\nmaster"]
         D4["d4\nDell Optiplex 3060\nworker"]
-        ExtSSD["Kingston 1TB SSD\nUSB 3.0"]
     end
 
     VPS -.->|Internet| HomeRouter
     HomeRouter -.->|WiFi| Keenetic
     Keenetic -->|"Ethernet, 100 Mbit"| MikroTik
+    Device -.->|WiFi| Keenetic
     Laptop -->|"Ethernet, 1 Gbit"| MikroTik
     MikroTik -->|"Ethernet, 1 Gbit"| Switch
     MikroTik -->|"Ethernet, 1 Gbit"| NAS
@@ -41,7 +42,6 @@ graph TD
     Switch --> D2
     Switch --> D3
     Switch --> D4
-    D4 ---|USB3| ExtSSD
 ```
 
 ## Traffic path
@@ -62,9 +62,14 @@ Node (d1-d4) → Cudy Switch → MikroTik hEX S → Ugreen NAS
 
 ## Role of each device
 
-### Keenetic Starter – WiFi bridge
+### Keenetic Starter – WiFi bridge and WiFi access
 
-Its only job is to connect to the home WiFi and pass internet to MikroTik via cable. No cluster network configuration is done on it: no DHCP, no firewall, no routing. It is used exclusively as a "bridge" between WiFi and Ethernet.
+Operates in two modes simultaneously:
+
+- **WiFi bridge** – connects to the home WiFi and passes internet to MikroTik via cable
+- **Own WiFi network** – broadcasts a separate network for accessing public cluster services
+
+Cluster network configuration (DHCP, firewall, routing) is not done on Keenetic – it is used as a bridge to home WiFi and as an access point for consuming content from the cluster.
 
 ### MikroTik hEX S – router
 
@@ -127,9 +132,15 @@ Remote client → VPS (WireGuard) → Internet → Home Router → WiFi → Keen
 
 The VPN is used for remote cluster management. It is not suitable for transferring large amounts of data due to limited throughput – for that, the local cable connection is used.
 
+### Keenetic WiFi network
+
+Keenetic Starter broadcasts a separate WiFi network for accessing public cluster services. Only addresses from a specific range allocated for user-facing services are reachable – this network is for content consumption (media, public web services, etc.).
+
+This network is not used for cluster administration – cable to MikroTik or WireGuard VPN is required for that.
+
 ## Limitations
 
-- **100 Mbit internet**: the bottleneck is the WiFi bridge (Keenetic Starter, 100 Mbit). Between nodes it's 1 Gbit.
+- **100 Mbit internet**: the bottleneck is the Keenetic Starter WiFi bridge (100 Mbit). Between nodes it's 1 Gbit. WiFi access to services is also limited to 100 Mbit.
 - **VPN speed**: WireGuard via VPS is suitable for management but not for bulk data transfer.
 - **No channel redundancy**: if WiFi or Keenetic goes down, the cluster loses internet access.
 

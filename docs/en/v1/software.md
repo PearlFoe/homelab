@@ -28,11 +28,10 @@ graph TB
         D2 <-->|etcd| D3
         D1 <-->|etcd| D3
     end
-    SSD["Kingston 1TB\nBackups"] ---|USB3| D4
 ```
 
 - **3 master nodes** (d1, d2, d3) with built-in etcd for HA
-- **1 worker node** (d4) with an external SSD attached for backups
+- **1 worker node** (d4)
 - Workloads can run on **any node**, including master nodes (taints removed)
 
 ## Services and applications

@@ -19,6 +19,7 @@ graph LR
     VPS["VPS (WireGuard)"] -.-> Internet["Интернет / Домашний WiFi"]
     Internet --> Keenetic["Keenetic Starter"]
     Keenetic --> MikroTik["MikroTik hEX S\nWireGuard"]
+    Device["Устройство"] -.->|WiFi| Keenetic
     Laptop["Ноутбук"] -->|кабель| MikroTik
     MikroTik --> Switch["Cudy Switch 8p"]
     MikroTik --> NAS["Ugreen DXP4800 Pro"]
@@ -26,7 +27,6 @@ graph LR
     Switch --> D2["d2 мастер"]
     Switch --> D3["d3 мастер"]
     Switch --> D4["d4 воркер"]
-    D4 ---|USB3| SSD["Kingston 1TB SSD"]
     subgraph k3sCluster ["k3s Кластер"]
         D1
         D2
@@ -38,13 +38,15 @@ graph LR
 ## Подробная документация
 
 - [Железо](hardware.md) – спецификации всех устройств, ноды d1-d4, NAS, хранилище
-- [Сеть](network.md) – сетевая топология, IP-адресация, WiFi-мост, доступ к кластеру (кабель + WireGuard VPN)
+- [Сеть](network.md) – сетевая топология, IP-адресация, WiFi-мост, доступ к кластеру (кабель, WiFi Keenetic, WireGuard VPN)
 - [Софт](software.md) – ОС, k3s, Ansible, сервисы
 
 ## История изменений
 
 | Версия | Дата | Изменения |
 |--------|------|-----------|
+| v1.4 | Июнь 2026 | Апгрейд нод: 24 ГБ RAM и 1 ТБ SSD на каждой, внешний Kingston SSD убран |
+| v1.3 | Июнь 2026 | WiFi-сеть Keenetic для доступа к публичным сервисам кластера |
 | v1.2 | Май 2026 | Удалённый доступ через WireGuard VPN (арендованный VPS), локальный доступ по кабелю |
 | v1.1 | Май 2026 | Добавлен NAS Ugreen DXP4800 Pro (TrueNAS, 2x 10 ТБ WD Red Plus, ZFS mirror) |
 | v1.0 | Ноябрь 2025 | Первая сборка: 4 ноды Dell Optiplex 3060, k3s кластер, MikroTik, WiFi-мост |

@@ -9,12 +9,14 @@
 
 ## Текущая версия
 
-[v1.2](v1/README.md) – 4 ноды на базе Dell Optiplex 3060 + Ugreen NAS, k3s кластер, сеть на MikroTik, удалённый доступ через WireGuard VPN, управление конфигурацией через Ansible.
+[v1.4](v1/README.md) – 4 ноды на базе Dell Optiplex 3060 (24 ГБ RAM, 1 ТБ SSD на каждой) + Ugreen NAS, k3s кластер, сеть на MikroTik, удалённый доступ через WireGuard VPN, WiFi Keenetic для публичных сервисов, управление конфигурацией через Ansible.
 
 ## История версий
 
 | Версия | Период | Описание |
 |--------|--------|----------|
-| [v1.2](v1/README.md) | Май 2026 – настоящее время | Удалённый доступ через WireGuard VPN с арендованного VPS, локальный доступ по кабелю к MikroTik |
+| [v1.4](v1/README.md) | Июнь 2026 – настоящее время | Апгрейд нод: 24 ГБ RAM и 1 ТБ SSD на каждой, внешний Kingston SSD убран |
+| [v1.3](v1/README.md) | Июнь 2026 | WiFi-сеть Keenetic для доступа к публичным сервисам кластера |
+| [v1.2](v1/README.md) | Май 2026 – июнь 2026 | Удалённый доступ через WireGuard VPN с арендованного VPS, локальный доступ по кабелю к MikroTik |
 | [v1.1](v1/README.md) | Май 2026 | Добавлен Ugreen DXP4800 Pro NAS с TrueNAS, 2x 10 ТБ WD Red Plus в ZFS mirror |
 | [v1](v1/README.md) | Ноябрь 2025 – май 2026 | 4x Dell Optiplex 3060, k3s кластер (3 мастера + 1 воркер), MikroTik hEX S, WiFi-мост для доступа в интернет |

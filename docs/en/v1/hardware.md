@@ -4,23 +4,22 @@
 
 | Model | Role | Key specs |
 |-------|------|-----------|
-| Dell Optiplex 3060 Micro (d1) | k3s master node | 6 CPU cores, 8 GB RAM, 128 GB SSD |
-| Dell Optiplex 3060 Micro (d2) | k3s master node | 6 CPU cores, 8 GB RAM, 128 GB SSD |
-| Dell Optiplex 3060 Micro (d3) | k3s master node | 6 CPU cores, 8 GB RAM, 128 GB SSD |
-| Dell Optiplex 3060 Micro (d4) | k3s worker node | 6 CPU cores, 8 GB RAM, 128 GB SSD |
-| Kingston 1 TB SSD (external) | Backup storage | USB 3.0, connected to d4 |
+| Dell Optiplex 3060 Micro (d1) | k3s master node | 6 CPU cores, 24 GB RAM, 1 TB SSD |
+| Dell Optiplex 3060 Micro (d2) | k3s master node | 6 CPU cores, 24 GB RAM, 1 TB SSD |
+| Dell Optiplex 3060 Micro (d3) | k3s master node | 6 CPU cores, 24 GB RAM, 1 TB SSD |
+| Dell Optiplex 3060 Micro (d4) | k3s worker node | 6 CPU cores, 24 GB RAM, 1 TB SSD |
 | MikroTik hEX S | Router | 1 Gbit, manages all cluster networking |
 | Cudy (unmanaged) | Switch | 8 ports, 1 Gbit |
 | Ugreen DXP4800 Pro | NAS | 8 GB RAM, 128 GB SSD (TrueNAS), 2x 10 TB HDD ZFS mirror |
-| Keenetic Starter | WiFi bridge | 100 Mbit, connects to home WiFi |
+| Keenetic Starter | WiFi bridge and WiFi access | 100 Mbit, bridge to home WiFi and own WiFi network |
 
 ## Cluster nodes (d1-d4)
 
 All four nodes are identical **Dell Optiplex 3060 Micro** mini PCs:
 
 - **CPU**: 6 cores
-- **RAM**: 8 GB
-- **Disk**: 128 GB SSD (internal)
+- **RAM**: 24 GB
+- **Disk**: 1 TB SSD (internal)
 - **Network**: built-in 1 Gbit Ethernet
 
 ### Labels and roles
@@ -30,15 +29,9 @@ All four nodes are identical **Dell Optiplex 3060 Micro** mini PCs:
 | d1 | master + etcd | – |
 | d2 | master + etcd | – |
 | d3 | master + etcd | – |
-| d4 | worker | External SSD attached |
+| d4 | worker | – |
 
 Workloads can run on all nodes, including master nodes (taints removed).
-
-## External storage
-
-- **Model**: Kingston 1 TB SSD
-- **Connection**: USB 3.0 to node d4
-- **Purpose**: backups and large file storage
 
 ## NAS
 
@@ -62,7 +55,7 @@ The primary network device for the cluster. A 1 Gbit router responsible for all 
 
 ### Keenetic Starter
 
-A 100 Mbit WiFi router configured as a WiFi bridge. Connects to the home WiFi network and provides internet to the cluster via cable through MikroTik. The 100 Mbit limitation was a deliberate choice to save on cost, since heavy internet traffic is not expected. Chosen as a budget solution to avoid running Ethernet cable across the apartment. No cluster network configuration is done on this device – only the home WiFi connection.
+A 100 Mbit WiFi router. Connects to the home WiFi as a bridge and provides internet to the cluster via cable through MikroTik. Also broadcasts its own WiFi network for accessing public cluster services. The 100 Mbit limitation was a deliberate choice to save on cost, since heavy internet traffic is not expected. Chosen as a budget solution to avoid running Ethernet cable across the apartment.
 
 <!-- ## Photos -->
 <!-- ### Overview -->

@@ -19,6 +19,7 @@ graph LR
     VPS["VPS (WireGuard)"] -.-> Internet["Internet / Home WiFi"]
     Internet --> Keenetic["Keenetic Starter"]
     Keenetic --> MikroTik["MikroTik hEX S\nWireGuard"]
+    Device["Device"] -.->|WiFi| Keenetic
     Laptop["Laptop"] -->|cable| MikroTik
     MikroTik --> Switch["Cudy Switch 8p"]
     MikroTik --> NAS["Ugreen DXP4800 Pro"]
@@ -26,7 +27,6 @@ graph LR
     Switch --> D2["d2 master"]
     Switch --> D3["d3 master"]
     Switch --> D4["d4 worker"]
-    D4 ---|USB3| SSD["Kingston 1TB SSD"]
     subgraph k3sCluster ["k3s Cluster"]
         D1
         D2
@@ -38,13 +38,15 @@ graph LR
 ## Detailed documentation
 
 - [Hardware](hardware.md) – specs for all devices, nodes d1-d4, NAS, storage
-- [Network](network.md) – network topology, IP addressing, WiFi bridge, cluster access (cable + WireGuard VPN)
+- [Network](network.md) – network topology, IP addressing, WiFi bridge, cluster access (cable, Keenetic WiFi, WireGuard VPN)
 - [Software](software.md) – OS, k3s, Ansible, services
 
 ## Changelog
 
 | Version | Date | Changes |
 |---------|------|---------|
+| v1.4 | June 2026 | Node upgrade: 24 GB RAM and 1 TB SSD per node, external Kingston SSD removed |
+| v1.3 | June 2026 | Keenetic WiFi network for accessing public cluster services |
 | v1.2 | May 2026 | Remote access via WireGuard VPN (rented VPS), local access via cable |
 | v1.1 | May 2026 | Added Ugreen DXP4800 Pro NAS (TrueNAS, 2x 10 TB WD Red Plus, ZFS mirror) |
 | v1.0 | November 2025 | Initial build: 4x Dell Optiplex 3060 nodes, k3s cluster, MikroTik, WiFi bridge |
